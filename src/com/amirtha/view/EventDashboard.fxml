@@ -94,7 +94,7 @@
                               </Button>
                               
                               
-                              <Button fx:id="logout" layoutX="9.0" layoutY="509.0" mnemonicParsing="false" onAction="#logout" stylesheets="@EventdashboardDesign.css">
+                              <Button fx:id="logout" layoutX="9.0" layoutY="509.0" mnemonicParsing="false" onAction="#LoginLogout" stylesheets="@EventdashboardDesign.css">
                                  <graphic>
                                     <FontAwesomeIcon fill="WHITE" glyphName="SIGN_OUT" size="2em" />
                                  </graphic>
@@ -116,7 +116,7 @@
                <center>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <AnchorPane fx:id="active_event_form" layoutX="35.0" layoutY="78.0" prefHeight="555.0" prefWidth="889.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="upcoming_event_form" layoutX="35.0" layoutY="78.0" prefHeight="555.0" prefWidth="889.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="15.0" layoutY="14.0" prefHeight="528.0" prefWidth="859.0" stylesheets="@EventdashboardDesign.css">
                                  <children>
@@ -139,7 +139,7 @@
                                             </columns>
                                           </TableView>
                                           
-                                          <Label layoutX="14.0" layoutY="14.0" text="Upcoming Event List ">
+                                          <Label layoutX="14.0" layoutY="14.0" text="Upcoming Event ">
                                        			<font>
                                           			<Font name="Tahoma" size="25.0" />
                                        			</font>
@@ -181,7 +181,7 @@
                                             </columns>
                                           </TableView>
                                           
-                                          <Label layoutX="14.0" layoutY="14.0" text="All Event List ">
+                                          <Label layoutX="14.0" layoutY="14.0" text="All Event ">
                                        			<font>
                                           			<Font name="Tahoma" size="25.0" />
                                        			</font>
@@ -209,7 +209,7 @@
                                           <String fx:value="shadow" />
                                        </styleClass>
                                        <children>
-                                          <TableView fx:id="users_tableView" layoutX="10.0" layoutY="62.0" prefHeight="227.0" prefWidth="840.0">
+                                          <TableView fx:id="users_tableView" layoutX="10.0" layoutY="62.0" prefHeight="227.0" prefWidth="840.0" onMouseClicked="#userSelect">
                                             <columns>
                                               <TableColumn fx:id="user_col_id" prefWidth="160.0" text="User ID" />
                                               <TableColumn fx:id="user_col_name" prefWidth="170.0" text="User Name" />
@@ -218,7 +218,7 @@
                                                 <TableColumn fx:id="user_col_created_at" prefWidth="170.0" text="Created At" />
                                             </columns>
                                           </TableView>
-                                          <Label layoutX="14.0" layoutY="14.0" text="User List ">
+                                          <Label layoutX="14.0" layoutY="14.0" text="Event Management Users">
                                        			<font>
                                           			<Font name="Tahoma" size="25.0" />
                                        			</font>
@@ -231,7 +231,7 @@
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="adduser_userid" layoutX="117.0" layoutY="320.0" prefHeight="25.0" prefWidth="172.0" styleClass="textfield" stylesheets="@EventdashboardDesign.css" />
+                                    <TextField fx:id="adduser_userid_textView" layoutX="117.0" layoutY="320.0" prefHeight="25.0" prefWidth="172.0" styleClass="textfield" stylesheets="@EventdashboardDesign.css" disable="true"/>
                                     
                                     
                                     <Label layoutX="23.0" layoutY="370.0" text="User Name:">
@@ -239,22 +239,19 @@
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="adduser_username" layoutX="117.0" layoutY="370.0" prefHeight="25.0" prefWidth="172.0" styleClass="textfield" stylesheets="@EventdashboardDesign.css" />
+                                    <TextField fx:id="adduser_username_textView" layoutX="117.0" layoutY="370.0" prefHeight="25.0" prefWidth="172.0" styleClass="textfield" stylesheets="@EventdashboardDesign.css" />
                                     <Label layoutX="35.0" layoutY="420.0" text="Password :">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="adduser_password" layoutX="117.0" layoutY="420.0" prefHeight="25.0" prefWidth="172.0" styleClass="textfield" stylesheets="@EventdashboardDesign.css" />
+                                    <TextField fx:id="adduser_password_textView" layoutX="117.0" layoutY="420.0" prefHeight="25.0" prefWidth="172.0" styleClass="textfield" stylesheets="@EventdashboardDesign.css" />
                                     
-                                    
-                                   
-                                     <Button fx:id="user_addBtn" layoutX="500.0" layoutY="320.0" mnemonicParsing="false"  prefHeight="31.0" prefWidth="120.0" styleClass="add-btn" stylesheets="@EventdashboardDesign.css" text="Add User" />
-                                    <Button fx:id="user_delete" layoutX="500.0" layoutY="370.0" mnemonicParsing="false"  prefHeight="31.0" prefWidth="94.0" styleClass="delete-btn" stylesheets="@EventdashboardDesign.css" text="Delete User" />
-                                    <Button fx:id="user_change_password" layoutX="500.0" layoutY="420.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="150.0" styleClass="clear-btn" stylesheets="@EventdashboardDesign.css" text="Change Password" />
-                                    <Button fx:id="user_clear" layoutX="500.0" layoutY="470.0" mnemonicParsing="false"  prefHeight="31.0" prefWidth="94.0" styleClass="update-btn" stylesheets="@EventdashboardDesign.css" text="Clear" />
-                                    
-                                    
+                                    <Button fx:id="user_addBtn" layoutX="500.0" layoutY="320.0" mnemonicParsing="false"  prefHeight="31.0" prefWidth="120.0" styleClass="add-btn" stylesheets="@EventdashboardDesign.css" text="Add User" onAction="#addUser"/>
+                                    <Button fx:id="user_delete" layoutX="500.0" layoutY="370.0" mnemonicParsing="false"  prefHeight="31.0" prefWidth="94.0" styleClass="delete-btn" stylesheets="@EventdashboardDesign.css" text="Delete User" onAction="#deleteUser"/>
+                                    <Button fx:id="user_change_password" layoutX="500.0" layoutY="420.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="150.0" styleClass="clear-btn" stylesheets="@EventdashboardDesign.css" text="Change Password" onAction="#changePassword"/>
+                                    <Button fx:id="user_clear" layoutX="500.0" layoutY="470.0" mnemonicParsing="false"  prefHeight="31.0" prefWidth="94.0" styleClass="update-btn" stylesheets="@EventdashboardDesign.css" text="Clear"  onAction="#clearUser"/>
+                                                                        
                                  </children>
                                  <styleClass>
                                     <String fx:value="white-bg" />
@@ -264,7 +261,7 @@
                            </children>
                         </AnchorPane>
                         
-                        
+
                      </children>
                   </AnchorPane>
                </center>
