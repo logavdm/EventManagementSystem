@@ -20,6 +20,7 @@ public class UserHelper {
 
 	private static final String UPDATE_USER_PASSWPRD="UPDATE USERS SET PASSWORD=? WHERE USERNAME=?";
 
+	private static final String USER_LOGIN="SELECT * FROM USERS WHERE USERNAME=? AND PASSWORD=?";
 	
 	public ObservableList<User> getNonAdminUsers(){
 		
@@ -105,6 +106,30 @@ public class UserHelper {
 			System.err.println("Exception occured when change the user password...");
 		}
 		return flag;
+	}
+	
+	public User loginUser(String username,String password) {
+		User user=null;
+		try {
+			PreparedStatement prepare = DbConnection.getConnection().prepareStatement(USER_LOGIN);
+			prepare.setString(1, username);
+			prepare.setString(2, password);
+			ResultSet rs = prepare.executeQuery();
+
+			while(rs.next()) {
+				user=new User();
+				user.setId(rs.getLong("id"));
+				user.setUsername(rs.getString("username"));
+				user.setPassword(rs.getString("password"));
+				user.setRole(rs.getString("role"));
+				user.setEnabled(rs.getBoolean("enabled"));
+				user.setUpdatedAt(rs.getTimestamp("updated_at"));
+				user.setCreatedAt(rs.getTimestamp("created_at"));
+			}
+		}catch (Exception e) {
+			System.err.println("Exception occured when user login....");
+		}
+		return user;
 	}
 
 }

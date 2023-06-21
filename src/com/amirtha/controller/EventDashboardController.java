@@ -1,5 +1,6 @@
 package com.amirtha.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -12,6 +13,7 @@ import com.amirtha.model.Event;
 import com.amirtha.model.User;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -66,6 +68,9 @@ public class EventDashboardController implements Initializable {
 
 	@FXML
 	private AnchorPane all_event_form;
+	
+	@FXML
+	private AnchorPane add_event_form;
 
 	@FXML
 	private AnchorPane user_management_form;
@@ -227,46 +232,69 @@ public class EventDashboardController implements Initializable {
 	private double x = 0;
 	private double y = 0;
 
-	public void LoginLogout() {
+	public void LoginLogout() throws IOException {
+		
+		if(this.sessionUser==null) {
+			
+			Parent root = FXMLLoader.load(getClass().getResource("/com/amirtha/view/LoginView.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            
+            root.setOnMousePressed((MouseEvent event) ->{
+                x = event.getSceneX();
+                y = event.getSceneY();
+            });
+            
+            root.setOnMouseDragged((MouseEvent event) ->{
+                stage.setX(event.getScreenX() - x);
+                stage.setY(event.getScreenY() - y);
+            });
+            
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.setScene(scene);
+            stage.show();
+            
+            all_evnt_btn.getScene().getWindow().hide();
+			
+		}else {
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("Confirmation Message");
+			alert.setHeaderText(null);
+			alert.setContentText("Are you sure you want to logout?");
+			Optional<ButtonType> option = alert.showAndWait();
+			try {
+				if (option.get().equals(ButtonType.OK)) {
 
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Confirmation Message");
-		alert.setHeaderText(null);
-		alert.setContentText("Are you sure you want to logout?");
-		Optional<ButtonType> option = alert.showAndWait();
-		try {
-			if (option.get().equals(ButtonType.OK)) {
+					logout.getScene().getWindow().hide();
+					Parent root = FXMLLoader.load(getClass().getResource("/com/amirtha/view/EventDashboard.fxml"));
+					Stage stage = new Stage();
+					Scene scene = new Scene(root);
 
-				logout.getScene().getWindow().hide();
-				Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-				Stage stage = new Stage();
-				Scene scene = new Scene(root);
+					root.setOnMousePressed((MouseEvent event) -> {
+						x = event.getSceneX();
+						y = event.getSceneY();
+					});
 
-				root.setOnMousePressed((MouseEvent event) -> {
-					x = event.getSceneX();
-					y = event.getSceneY();
-				});
+					root.setOnMouseDragged((MouseEvent event) -> {
+						stage.setX(event.getScreenX() - x);
+						stage.setY(event.getScreenY() - y);
 
-				root.setOnMouseDragged((MouseEvent event) -> {
-					stage.setX(event.getScreenX() - x);
-					stage.setY(event.getScreenY() - y);
+						stage.setOpacity(.8);
+					});
 
-					stage.setOpacity(.8);
-				});
+					root.setOnMouseReleased((MouseEvent event) -> {
+						stage.setOpacity(1);
+					});
 
-				root.setOnMouseReleased((MouseEvent event) -> {
-					stage.setOpacity(1);
-				});
+					stage.initStyle(StageStyle.TRANSPARENT);
 
-				stage.initStyle(StageStyle.TRANSPARENT);
-
-				stage.setScene(scene);
-				stage.show();
+					stage.setScene(scene);
+					stage.show();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-
 	}
 
 	public void close() {
@@ -280,48 +308,46 @@ public class EventDashboardController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
-		User user = new User();
-		user.setRole("ADMIN");
-
-		this.sessionUser = user;
 		
-		upcoming_event_form.setVisible(true);
-		active_evnt_btn.setDisable(true);
-		active_evnt_btn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
+		Platform.runLater(() -> {
 
-		all_event_form.setVisible(false);
+			activeEventMenuSwitch(true);
+			allEventMenuSwitch(false);
+			addEventMenuSwitch(false);
+			manageUserMenuSwitch(false);
 
-		LoadActiveEvents();
+			if (this.sessionUser != null && !this.sessionUser.getRole().equalsIgnoreCase("ADMIN")) {
+				mgnt_usr_btn.setVisible(false);
+				mgnt_usr_btn.setDisable(true);
+			}
 
-		if (this.sessionUser != null && !this.sessionUser.getRole().equalsIgnoreCase("ADMIN")) {
-			mgnt_usr_btn.setVisible(false);
-			mgnt_usr_btn.setDisable(true);
-		}
+			if (this.sessionUser == null) {
+				logoutlabel.setText("SIGN IN");
+				FontAwesomeIcon fntIcon = new FontAwesomeIcon();
+				fntIcon.setFill(Color.WHITE);
+				fntIcon.setSize("2em");
+				fntIcon.setGlyphName("SIGN_IN");
+				logout.setGraphic(fntIcon);
+				
+				mgnt_usr_btn.setVisible(false);
+				mgnt_usr_btn.setDisable(true);
 
-		if (this.sessionUser == null) {
-			logoutlabel.setText("SIGN IN");
-			FontAwesomeIcon fntIcon = new FontAwesomeIcon();
-			fntIcon.setFill(Color.WHITE);
-			fntIcon.setSize("2em");
-			fntIcon.setGlyphName("SIGN_IN");
-			logout.setGraphic(fntIcon);
+				add_evnt_btn.setVisible(false);
+				add_evnt_btn.setDisable(true);
+			}
 			
-			mgnt_usr_btn.setVisible(false);
-			mgnt_usr_btn.setDisable(true);
+			if(this.sessionUser!=null) {
+				logoutlabel.setText("SIGN OUT");
+				FontAwesomeIcon fntIcon = new FontAwesomeIcon();
+				fntIcon.setFill(Color.WHITE);
+				fntIcon.setSize("2em");
+				fntIcon.setGlyphName("SIGN_OUT");
+				logout.setGraphic(fntIcon);
+			}
 
-			add_evnt_btn.setVisible(false);
-			add_evnt_btn.setDisable(true);
-		}
+	    });
 		
-		if(this.sessionUser!=null) {
-			logoutlabel.setText("SIGN OUT");
-			FontAwesomeIcon fntIcon = new FontAwesomeIcon();
-			fntIcon.setFill(Color.WHITE);
-			fntIcon.setSize("2em");
-			fntIcon.setGlyphName("SIGN_OUT");
-			logout.setGraphic(fntIcon);
-		}
+		
 	}
 
 	public void initData(User user) {
@@ -332,23 +358,30 @@ public class EventDashboardController implements Initializable {
 	public void changePage(ActionEvent event) {
 
 		if (event.getSource() == active_evnt_btn) {
-			LoadActiveEvents();
 			activeEventMenuSwitch(true);
 			allEventMenuSwitch(false);
+			addEventMenuSwitch(false);
 			manageUserMenuSwitch(false);
 		}
 
 		if (event.getSource() == all_evnt_btn) {
-			LoadAllEvents();
 			activeEventMenuSwitch(false);
 			allEventMenuSwitch(true);
+			addEventMenuSwitch(false);
+			manageUserMenuSwitch(false);
+		}
+		
+		if (event.getSource() == add_evnt_btn) {
+			activeEventMenuSwitch(false);
+			allEventMenuSwitch(false);
+			addEventMenuSwitch(true);
 			manageUserMenuSwitch(false);
 		}
 
 		if (event.getSource() == mgnt_usr_btn) {
-			this.loadUsers();
 			activeEventMenuSwitch(false);
 			allEventMenuSwitch(false);
+			addEventMenuSwitch(false);
 			manageUserMenuSwitch(true);
 		}
 	}
@@ -570,6 +603,7 @@ public class EventDashboardController implements Initializable {
 	
 	public void activeEventMenuSwitch(boolean flag) {
 		if(flag) {
+			LoadActiveEvents();
 			upcoming_event_form.setVisible(true);
 			active_evnt_btn.setDisable(true);
 			active_evnt_btn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
@@ -582,6 +616,7 @@ public class EventDashboardController implements Initializable {
 	
 	public void allEventMenuSwitch(boolean flag) {
 		if(flag) {
+			LoadAllEvents();
 			all_event_form.setVisible(true);
 			all_evnt_btn.setDisable(true);
 			all_evnt_btn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
@@ -592,8 +627,21 @@ public class EventDashboardController implements Initializable {
 		}
 	}
 	
+	public void addEventMenuSwitch(boolean flag) {
+		if(flag) {
+			add_event_form.setVisible(true);
+			add_evnt_btn.setDisable(true);
+			add_evnt_btn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
+		}else {
+			add_event_form.setVisible(false);
+			add_evnt_btn.setStyle("-fx-background-color:transparent");
+			add_evnt_btn.setDisable(false);
+		}
+	}
+	
 	public void manageUserMenuSwitch(boolean flag) {
 		if(flag) {
+			this.loadUsers();
 			user_management_form.setVisible(true);
 			mgnt_usr_btn.setDisable(true);
 			mgnt_usr_btn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");

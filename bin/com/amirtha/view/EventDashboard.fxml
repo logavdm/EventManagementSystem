@@ -80,7 +80,7 @@
                               </Button>
                               
                               <Line endX="69.0" layoutX="121.0" layoutY="178.0" startX="-100.0" stroke="WHITE" />
-                              <Button fx:id="add_evnt_btn" layoutX="16.0" layoutY="307.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="@EventdashboardDesign.css" text="Add Event">
+                              <Button fx:id="add_evnt_btn" layoutX="16.0" layoutY="307.0" mnemonicParsing="false" onAction="#changePage" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="@EventdashboardDesign.css" text="Add Event">
                                  <graphic>
                                     <FontAwesomeIcon fill="WHITE" glyphName="PLUS" size="1.5em" />
                                  </graphic>
@@ -189,6 +189,51 @@
                                           
                                        </children>
                                     </AnchorPane>
+                                 </children>
+                                 <styleClass>
+                                    <String fx:value="white-bg" />
+                                    <String fx:value="shadow" />
+                                 </styleClass>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                        
+                        <AnchorPane fx:id="add_event_form" layoutX="35.0" layoutY="78.0" prefHeight="555.0" prefWidth="889.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <AnchorPane layoutX="15.0" layoutY="14.0" prefHeight="528.0" prefWidth="859.0" stylesheets="@EventdashboardDesign.css">
+                                 <children>
+                                    
+                                    
+                                    <Label layoutX="14.0" layoutY="14.0" text="Create Event">
+                                       			<font>
+                                          			<Font name="Tahoma" size="25.0" />
+                                       			</font>
+                                    </Label>
+                                    
+                                    <Label layoutX="23.0" layoutY="100.0" text="Name of the Event :">
+                                       <font>
+                                          <Font name="Tahoma" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="addevent_userid_textView" layoutX="150.0" layoutY="97.0" prefHeight="25.0" prefWidth="172.0" styleClass="textfield" stylesheets="@EventdashboardDesign.css"/>
+                                    
+                                    
+                                    <Label layoutX="23.0" layoutY="157.0" text="Date Range :">
+                                       <font>
+                                          <Font name="Tahoma" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="addevent_username_textView" layoutX="150.0" layoutY="160.0" prefHeight="25.0" prefWidth="172.0" styleClass="textfield" stylesheets="@EventdashboardDesign.css" />
+                                    <Label layoutX="23.0" layoutY="197.0" text="Venue :">
+                                       <font>
+                                          <Font name="Tahoma" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="addevent_password_textView" layoutX="150.0" layoutY="207.0" prefHeight="25.0" prefWidth="172.0" styleClass="textfield" stylesheets="@EventdashboardDesign.css" />
+                                    
+                                    <Button fx:id="event_addBtn" layoutX="500.0" layoutY="320.0" mnemonicParsing="false"  prefHeight="31.0" prefWidth="120.0" styleClass="add-btn" stylesheets="@EventdashboardDesign.css" text="Add Event" />
+                                    <Button fx:id="event_clear" layoutX="500.0" layoutY="470.0" mnemonicParsing="false"  prefHeight="31.0" prefWidth="94.0" styleClass="update-btn" stylesheets="@EventdashboardDesign.css" text="Clear"/>
+                                                                        
                                  </children>
                                  <styleClass>
                                     <String fx:value="white-bg" />

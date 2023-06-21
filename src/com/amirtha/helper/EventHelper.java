@@ -12,9 +12,7 @@ public class EventHelper {
 
 	private static final String SELECT_ALL_EVENTS = "SELECT E.*,D.DEPARTMENT_NAME FROM EVENTS E LEFT JOIN DEPARTMENT D ON D.DEP_ID=E.DEPT_ID ORDER BY E.DATE_FROM";
 
-	//private static final String SELECT_ACTIVE_EVENTS = "SELECT E.*,D.DEPARTMENT_NAME FROM EVENTS E LEFT JOIN DEPARTMENT D ON D.DEP_ID=E.DEPT_ID ORDER BY E.DATE_FROM";
-//
-//	private static final String SELECT_EXPIRED_EVENTS = "";
+	private static final String SELECT_ACTIVE_EVENTS = "SELECT E.*,D.DEPARTMENT_NAME FROM EVENTS E LEFT JOIN DEPARTMENT D ON D.DEP_ID=E.DEPT_ID WHERE E.DATE_FROM >= DATE(NOW()) ORDER BY E.DATE_FROM";
 
 	public ObservableList<Event> getAllEvents() {
 		ObservableList<Event> listEvents = FXCollections.observableArrayList();
@@ -50,7 +48,7 @@ public class EventHelper {
 		ObservableList<Event> listEvents = FXCollections.observableArrayList();
 		
 		try {
-			PreparedStatement prepare = DbConnection.getConnection().prepareStatement(SELECT_ALL_EVENTS);
+			PreparedStatement prepare = DbConnection.getConnection().prepareStatement(SELECT_ACTIVE_EVENTS);
 			ResultSet rs = prepare.executeQuery();
 			while (rs.next()) {
 				Event e = new Event();
@@ -71,6 +69,7 @@ public class EventHelper {
 
 		} catch (Exception e) {
 			System.err.println("Exception occured when retrive all events ...");
+			e.printStackTrace();
 		}
 		return listEvents;
 	}
