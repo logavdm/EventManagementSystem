@@ -51,7 +51,7 @@ public class LoginController implements Initializable {
     public void loginAdmin() throws IOException{
     	
     	String username=this.username.getText();
-    	String password=this.username.getText();
+    	String password=this.password.getText();
     	
     	Alert alert =null;
     	
