@@ -8,6 +8,8 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.amirtha.controller.LoginController">
    <children>
@@ -15,12 +17,11 @@
          <children>
             <AnchorPane prefHeight="400.0" prefWidth="300.0" styleClass="left-form" stylesheets="@loginDesign.css">
                <children>
-                  <FontAwesomeIcon fill="WHITE" glyphName="USERS" layoutX="99.0" layoutY="153.0" size="8em" />
-                  <Label layoutX="26.0" layoutY="177.0" text="Event management System" textFill="WHITE">
-                     <font>
-                        <Font name="Tahoma" size="18.0" />
-                     </font>
-                  </Label>
+                   <ImageView fitHeight="270.0" fitWidth="260.0" layoutX="20.0" layoutY="147.0" pickOnBounds="true" preserveRatio="true">
+               			<image>
+                  			<Image url="@logo.png" />
+               			</image>
+            		</ImageView>
                </children>
             </AnchorPane>
             <AnchorPane layoutX="300.0" prefHeight="400.0" prefWidth="300.0" styleClass="right-form" stylesheets="@loginDesign.css">

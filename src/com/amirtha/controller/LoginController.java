@@ -127,8 +127,29 @@ public class LoginController implements Initializable {
     	}
     }
     
-    public void close(){
-        System.exit(0);
+    public void close() throws IOException{
+    	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/amirtha/view/EventDashboard.fxml"));     
+
+		Parent root = (Parent)fxmlLoader.load();  
+		
+        Stage stage = new Stage();
+        Scene scene = new Scene(root);
+        
+        root.setOnMousePressed((MouseEvent event) ->{
+            x = event.getSceneX();
+            y = event.getSceneY();
+        });
+        
+        root.setOnMouseDragged((MouseEvent event) ->{
+            stage.setX(event.getScreenX() - x);
+            stage.setY(event.getScreenY() - y);
+        });
+        
+        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.setScene(scene);
+        stage.show();
+    
+        loginBtn.getScene().getWindow().hide();
     }
     
     @Override

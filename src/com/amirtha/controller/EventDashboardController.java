@@ -310,6 +310,9 @@ public class EventDashboardController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		
 		Platform.runLater(() -> {
+			
+//			User user=new User(null, "user", "pass", "Admin", false, null, null);
+//			this.sessionUser=user;
 
 			activeEventMenuSwitch(true);
 			allEventMenuSwitch(false);
@@ -334,6 +337,8 @@ public class EventDashboardController implements Initializable {
 
 				add_evnt_btn.setVisible(false);
 				add_evnt_btn.setDisable(true);
+				
+				username.setVisible(false);
 			}
 			
 			if(this.sessionUser!=null) {
@@ -343,6 +348,7 @@ public class EventDashboardController implements Initializable {
 				fntIcon.setSize("2em");
 				fntIcon.setGlyphName("SIGN_OUT");
 				logout.setGraphic(fntIcon);
+				username.setText(String.valueOf(sessionUser.getUsername().toUpperCase()));
 			}
 
 	    });

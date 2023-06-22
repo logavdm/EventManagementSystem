@@ -18,5 +18,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/fontawesomefx-8.2.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.48.jar"/>
+	<classpathentry kind="lib" path="lib/datetime-picker-javafx-1.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
