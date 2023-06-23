@@ -2,18 +2,21 @@ package com.amirtha.controller;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import com.amirtha.helper.CommonHelper;
 import com.amirtha.helper.EventHelper;
 import com.amirtha.helper.UserHelper;
 import com.amirtha.model.Event;
 import com.amirtha.model.User;
+import com.browniebytes.javafx.control.DateTimePicker;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -41,6 +44,8 @@ public class EventDashboardController implements Initializable {
 	private User sessionUser;
 
 	private User currentSelectedUser;
+	
+	private Event currentSelectedEvent;
 
 	private EventHelper eventHelper;
 
@@ -83,7 +88,7 @@ public class EventDashboardController implements Initializable {
 	private Button all_evnt_btn;
 
 	@FXML
-	private Button add_evnt_btn;
+	private Button manage_evnt_btn;
 
 	@FXML
 	private Button mgnt_usr_btn;
@@ -105,19 +110,13 @@ public class EventDashboardController implements Initializable {
 	private TableColumn<Event, String> event_col_id;
 
 	@FXML
-	private TableColumn<Event, String> event_col_department;
-
-	@FXML
 	private TableColumn<Event, String> event_col_name;
 
 	@FXML
 	private TableColumn<Event, String> event_col_venue;
 
 	@FXML
-	private TableColumn<Event, Date> event_col_from_date;
-
-	@FXML
-	private TableColumn<Event, Date> event_col_to_date;
+	private TableColumn<Event, String> event_col_date;
 
 	@FXML
 	private TableColumn<Event, String> event_col_time;
@@ -133,25 +132,58 @@ public class EventDashboardController implements Initializable {
 	private TableColumn<Event, String> all_event_col_id;
 
 	@FXML
-	private TableColumn<Event, String> all_event_col_department;
-
-	@FXML
 	private TableColumn<Event, String> all_event_col_name;
 
 	@FXML
 	private TableColumn<Event, String> all_event_col_venue;
 
 	@FXML
-	private TableColumn<Event, Timestamp> all_event_col_from_date;
-
-	@FXML
-	private TableColumn<Event, Timestamp> all_event_col_to_date;
+	private TableColumn<Event, String> all_event_col_date;
 
 	@FXML
 	private TableColumn<Event, String> all_event_col_time;
 
 	@FXML
 	private TableColumn<Event, String> all_event_col_description;
+	
+	// MANAGE EVENT TABLE VIEW
+	@FXML
+	private TableView<Event> manageEventTableView;
+
+	@FXML
+	private TableColumn<Event, Long> add_event_col_id;
+
+	@FXML
+	private TableColumn<Event, String> add_event_col_name;
+
+	@FXML
+	private TableColumn<Event, String> add_event_col_venue;
+
+	@FXML
+	private TableColumn<Event, String> add_event_col_date;
+
+	@FXML
+	private TableColumn<Event, String> add_event_col_time;
+
+	@FXML
+	private TableColumn<Event, String> add_event_col_description;
+	
+	//ADD EVENT TEXTFIELDS
+	@FXML
+	private TextField add_event_name_textView;
+	
+	@FXML
+	private TextField add_event_venue_textView;
+	
+	@FXML
+	private TextField add_event_description_textView;
+	
+	@FXML
+	private DateTimePicker add_event_from_datepicker;
+	
+	@FXML
+	private DateTimePicker add_event_to_datepicker;
+	
 
 	// USERS TABLE VIEW
 	@FXML
@@ -198,28 +230,53 @@ public class EventDashboardController implements Initializable {
 
 	public void convertToActiveEventTableView() {
 		event_col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
-		event_col_department.setCellValueFactory(new PropertyValueFactory<>("departmentName"));
 		event_col_name.setCellValueFactory(new PropertyValueFactory<>("name"));
 		event_col_venue.setCellValueFactory(new PropertyValueFactory<>("venue"));
-		event_col_from_date.setCellValueFactory(new PropertyValueFactory<>("fromDate"));
-		event_col_to_date.setCellValueFactory(new PropertyValueFactory<>("toDate"));
-		event_col_time.setCellValueFactory(new PropertyValueFactory<>("fromTime"));
+		
+		event_col_date.setCellValueFactory(data -> {
+			return new SimpleStringProperty(data.getValue().getFromDate().format(CommonHelper.sdf)+" - "+data.getValue().getToDate().format(CommonHelper.sdf));
+		});
+		event_col_time.setCellValueFactory(data -> {
+			return new SimpleStringProperty(data.getValue().getFromTime().format(CommonHelper.stf)+" - "+data.getValue().getToTime().format(CommonHelper.stf));
+		});
+		
 		event_col_description.setCellValueFactory(new PropertyValueFactory<>("description"));
 		eventTableView.setItems(this.listEvents);
 	}
 	
+	
+	
 	public void convertToAllEventTableView() {
 		all_event_col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
-		all_event_col_department.setCellValueFactory(new PropertyValueFactory<>("departmentName"));
 		all_event_col_name.setCellValueFactory(new PropertyValueFactory<>("name"));
-		all_event_col_venue.setCellValueFactory(new PropertyValueFactory<>("venue"));
-		all_event_col_from_date.setCellValueFactory(new PropertyValueFactory<>("fromDate"));
-		all_event_col_to_date.setCellValueFactory(new PropertyValueFactory<>("toDate"));
-		all_event_col_time.setCellValueFactory(new PropertyValueFactory<>("fromTime"));
+		all_event_col_venue.setCellValueFactory(new PropertyValueFactory<>("venue"));		
+		
+		all_event_col_date.setCellValueFactory(data -> {
+			return new SimpleStringProperty(data.getValue().getFromDate().format(CommonHelper.sdf)+" - "+data.getValue().getToDate().format(CommonHelper.sdf));
+		});
+		all_event_col_time.setCellValueFactory(data -> {
+			return new SimpleStringProperty(data.getValue().getFromTime().format(CommonHelper.stf)+" - "+data.getValue().getToTime().format(CommonHelper.stf));
+		});
 		all_event_col_description.setCellValueFactory(new PropertyValueFactory<>("description"));
 		allEventTableView.setItems(this.listEvents);
 	}
-
+	
+	
+	public void convertToManageEventTableView() {
+		add_event_col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
+		add_event_col_name.setCellValueFactory(new PropertyValueFactory<>("name"));
+		add_event_col_venue.setCellValueFactory(new PropertyValueFactory<>("venue"));
+		add_event_col_date.setCellValueFactory(data -> {
+			return new SimpleStringProperty(data.getValue().getFromDate().format(CommonHelper.sdf)+" - "+data.getValue().getToDate().format(CommonHelper.sdf));
+		});
+		add_event_col_time.setCellValueFactory(data -> {
+			return new SimpleStringProperty(data.getValue().getFromTime().format(CommonHelper.stf)+" - "+data.getValue().getToTime().format(CommonHelper.stf));
+		});
+		add_event_col_description.setCellValueFactory(new PropertyValueFactory<>("description"));
+		manageEventTableView.setItems(this.listEvents);
+	}
+	
+	
 	public void convertToUserTableView() {
 		user_col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
 		user_col_name.setCellValueFactory(new PropertyValueFactory<>("username"));
@@ -311,12 +368,12 @@ public class EventDashboardController implements Initializable {
 		
 		Platform.runLater(() -> {
 			
-//			User user=new User(null, "user", "pass", "Admin", false, null, null);
-//			this.sessionUser=user;
-
+			User usr=new User(null, "demo", "demo", "ADMIN", false, null, null);
+			this.sessionUser=usr;
+			
 			activeEventMenuSwitch(true);
 			allEventMenuSwitch(false);
-			addEventMenuSwitch(false);
+			manageEventMenuSwitch(false);
 			manageUserMenuSwitch(false);
 
 			if (this.sessionUser != null && !this.sessionUser.getRole().equalsIgnoreCase("ADMIN")) {
@@ -335,8 +392,8 @@ public class EventDashboardController implements Initializable {
 				mgnt_usr_btn.setVisible(false);
 				mgnt_usr_btn.setDisable(true);
 
-				add_evnt_btn.setVisible(false);
-				add_evnt_btn.setDisable(true);
+				manage_evnt_btn.setVisible(false);
+				manage_evnt_btn.setDisable(true);
 				
 				username.setVisible(false);
 			}
@@ -350,10 +407,7 @@ public class EventDashboardController implements Initializable {
 				logout.setGraphic(fntIcon);
 				username.setText(String.valueOf(sessionUser.getUsername().toUpperCase()));
 			}
-
 	    });
-		
-		
 	}
 
 	public void initData(User user) {
@@ -366,28 +420,28 @@ public class EventDashboardController implements Initializable {
 		if (event.getSource() == active_evnt_btn) {
 			activeEventMenuSwitch(true);
 			allEventMenuSwitch(false);
-			addEventMenuSwitch(false);
+			manageEventMenuSwitch(false);
 			manageUserMenuSwitch(false);
 		}
 
 		if (event.getSource() == all_evnt_btn) {
 			activeEventMenuSwitch(false);
 			allEventMenuSwitch(true);
-			addEventMenuSwitch(false);
+			manageEventMenuSwitch(false);
 			manageUserMenuSwitch(false);
 		}
 		
-		if (event.getSource() == add_evnt_btn) {
+		if (event.getSource() == manage_evnt_btn) {
 			activeEventMenuSwitch(false);
 			allEventMenuSwitch(false);
-			addEventMenuSwitch(true);
+			manageEventMenuSwitch(true);
 			manageUserMenuSwitch(false);
 		}
 
 		if (event.getSource() == mgnt_usr_btn) {
 			activeEventMenuSwitch(false);
 			allEventMenuSwitch(false);
-			addEventMenuSwitch(false);
+			manageEventMenuSwitch(false);
 			manageUserMenuSwitch(true);
 		}
 	}
@@ -419,6 +473,20 @@ public class EventDashboardController implements Initializable {
 		this.listEvents = eventHelper.getAllEvents();
 		this.convertToAllEventTableView();
 	}
+	
+	private void LoadEventsForManage() {
+		
+		if(this.eventHelper==null) {
+			this.eventHelper = new EventHelper();
+		}
+		
+		if(this.listEvents!=null) {
+			this.listEvents.clear();
+		}
+		
+		this.listEvents = eventHelper.getAllEvents();
+		this.convertToManageEventTableView();
+	}
 
 	private void loadUsers() {
 
@@ -446,6 +514,31 @@ public class EventDashboardController implements Initializable {
 			adduser_userid_textView.setText(String.valueOf(currentSelectedUser.getId()));
 			adduser_username_textView.setText(String.valueOf(currentSelectedUser.getUsername()));
 			adduser_password_textView.setText(String.valueOf(currentSelectedUser.getPassword()));
+		}
+	}
+	
+	public void eventSelect() {
+
+		this.currentSelectedEvent = manageEventTableView.getSelectionModel().getSelectedItem();
+		int num = manageEventTableView.getSelectionModel().getSelectedIndex();
+
+		if ((num - 1) < -1) {
+			return;
+		}
+
+		if (currentSelectedEvent != null) {
+			add_event_name_textView.setText(String.valueOf(this.currentSelectedEvent.getName()));
+			add_event_venue_textView.setText(String.valueOf(this.currentSelectedEvent.getVenue()));
+			add_event_description_textView.setText(String.valueOf(this.currentSelectedEvent.getDescription()));
+			add_event_name_textView.setText(String.valueOf(this.currentSelectedEvent.getName()));
+			add_event_name_textView.setText(String.valueOf(this.currentSelectedEvent.getName()));
+			
+			LocalDateTime fromDate=this.currentSelectedEvent.getFromDate().atTime(this.currentSelectedEvent.getFromTime());
+			add_event_from_datepicker.setTime(fromDate);
+			
+			LocalDateTime toDate=this.currentSelectedEvent.getToDate().atTime(this.currentSelectedEvent.getToTime());
+			add_event_to_datepicker.setTime(toDate);
+				
 		}
 	}
 
@@ -633,15 +726,16 @@ public class EventDashboardController implements Initializable {
 		}
 	}
 	
-	public void addEventMenuSwitch(boolean flag) {
+	public void manageEventMenuSwitch(boolean flag) {
 		if(flag) {
+			this.LoadEventsForManage();
 			add_event_form.setVisible(true);
-			add_evnt_btn.setDisable(true);
-			add_evnt_btn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
+			manage_evnt_btn.setDisable(true);
+			manage_evnt_btn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
 		}else {
 			add_event_form.setVisible(false);
-			add_evnt_btn.setStyle("-fx-background-color:transparent");
-			add_evnt_btn.setDisable(false);
+			manage_evnt_btn.setStyle("-fx-background-color:transparent");
+			manage_evnt_btn.setDisable(false);
 		}
 	}
 	

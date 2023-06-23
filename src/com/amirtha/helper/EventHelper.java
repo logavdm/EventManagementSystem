@@ -2,6 +2,7 @@ package com.amirtha.helper;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import com.amirtha.model.Event;
 
@@ -21,20 +22,7 @@ public class EventHelper {
 			PreparedStatement prepare = DbConnection.getConnection().prepareStatement(SELECT_ALL_EVENTS);
 			ResultSet rs = prepare.executeQuery();
 			while (rs.next()) {
-				Event e = new Event();
-				e.setId(rs.getLong("event_id"));
-				e.setName(rs.getString("event_name"));
-				e.setVenue(rs.getString("venue"));
-				e.setFromDate(rs.getTimestamp("date_from"));
-				e.setToDate(rs.getTimestamp("date_to"));
-				e.setFromTime(rs.getString("time_from"));
-				e.setToTime(rs.getString("time_to"));
-				e.setDescription(rs.getString("description"));
-				e.setDepartmentId(rs.getLong("dept_id"));
-				e.setDepartmentName(rs.getString("department_name"));
-				e.setCreateTime(rs.getDate("created_at"));
-				e.setUpdatedTime(rs.getDate("updated_at"));
-				listEvents.add(e);
+				listEvents.add(eventResultExtractor(rs));
 			}
 
 		} catch (Exception e) {
@@ -51,20 +39,7 @@ public class EventHelper {
 			PreparedStatement prepare = DbConnection.getConnection().prepareStatement(SELECT_ACTIVE_EVENTS);
 			ResultSet rs = prepare.executeQuery();
 			while (rs.next()) {
-				Event e = new Event();
-				e.setId(rs.getLong("event_id"));
-				e.setName(rs.getString("event_name"));
-				e.setVenue(rs.getString("venue"));
-				e.setFromDate(rs.getTimestamp("date_from"));
-				e.setToDate(rs.getTimestamp("date_to"));
-				e.setFromTime(rs.getString("time_from"));
-				e.setToTime(rs.getString("time_to"));
-				e.setDescription(rs.getString("description"));
-				e.setDepartmentId(rs.getLong("dept_id"));
-				e.setDepartmentName(rs.getString("department_name"));
-				e.setCreateTime(rs.getDate("created_at"));
-				e.setUpdatedTime(rs.getDate("updated_at"));
-				listEvents.add(e);
+				listEvents.add(eventResultExtractor(rs));
 			}
 
 		} catch (Exception e) {
@@ -74,8 +49,20 @@ public class EventHelper {
 		return listEvents;
 	}
 
-	public void getExpiredEvents() {
-
+	public Event eventResultExtractor(ResultSet rs) throws SQLException {
+		Event e = new Event();
+		e.setId(rs.getLong("event_id"));
+		e.setName(rs.getString("event_name"));
+		e.setVenue(rs.getString("venue"));
+		e.setFromDate(rs.getTimestamp("date_from").toLocalDateTime().toLocalDate());
+		e.setToDate(rs.getTimestamp("date_to").toLocalDateTime().toLocalDate());
+		e.setFromTime(rs.getTimestamp("date_from").toLocalDateTime().toLocalTime());
+		e.setToTime(rs.getTimestamp("date_to").toLocalDateTime().toLocalTime());
+		e.setDescription(rs.getString("description"));
+		e.setCreateTime(rs.getDate("created_at"));
+		e.setUpdatedTime(rs.getDate("updated_at"));
+		return e;
 	}
+	
 
 }

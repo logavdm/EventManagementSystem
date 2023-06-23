@@ -10,7 +10,7 @@ import javafx.collections.ObservableList;
 
 public class UserHelper {
 	
-	private static final String SELECT_ALL_NON_ADMIN_USERS = "SELECT * FROM USERS";
+	private static final String SELECT_ALL_NON_ADMIN_USERS = "SELECT * FROM USERS WHERE ROLE!='ADMIN'";
 	
 	private static final String COUNT_USER_BY_USERNAME="SELECT COUNT(ID) AS COUNT FROM USERS WHERE USERNAME=?";
 	
