@@ -4,11 +4,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import com.amirtha.model.User;
+import com.amirtha.validation.UserValidation;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 public class UserHelper {
+	
+	private final UserValidation userValidation;
 	
 	private static final String SELECT_ALL_NON_ADMIN_USERS = "SELECT * FROM USERS WHERE ROLE!='ADMIN'";
 	
@@ -22,6 +27,10 @@ public class UserHelper {
 
 	private static final String USER_LOGIN="SELECT * FROM USERS WHERE USERNAME=? AND PASSWORD=?";
 	
+	public UserHelper() {
+		this.userValidation=new UserValidation();
+	}
+		
 	public ObservableList<User> getNonAdminUsers(){
 		
 		ObservableList<User> listUsers = FXCollections.observableArrayList();
@@ -74,6 +83,24 @@ public class UserHelper {
 		}
 		return flag;
 	}
+	
+	public boolean validateAddUser(User user) {
+		boolean flag=false;	
+		if(this.userValidation.addUserValidation(user)) {
+			if (checkUserExists(user.getUsername())) {
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("User already exists");
+				alert.setHeaderText(null);
+				alert.setContentText("User already exists");
+				alert.showAndWait();
+				return false;
+			}
+			return addUser(user);
+		}
+		return flag;
+	}
+	
+	
 	
 	public boolean addUser(User user) {
 		boolean flag=false;

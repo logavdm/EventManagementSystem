@@ -1,25 +1,24 @@
 package com.amirtha.model;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 public class EventIO {
 
-	private Long id;
 	private String name;
 	private String venue;
-	private LocalDate fromDate;
-	private LocalDate toDate;
+	private Date fromDate;
+	private Date toDate;
 	private String description;
-	private Date createTime;
-	private Date updatedTime;
 	
-	public Long getId() {
-		return id;
+
+	public EventIO(String name, String venue, Date fromDate, Date toDate, String description) {
+		this.name = name;
+		this.venue = venue;
+		this.fromDate = fromDate;
+		this.toDate = toDate;
+		this.description = description;
 	}
-	public void setId(Long id) {
-		this.id = id;
-	}
+	
 	public String getName() {
 		return name;
 	}
@@ -32,36 +31,23 @@ public class EventIO {
 	public void setVenue(String venue) {
 		this.venue = venue;
 	}
-	public LocalDate getFromDate() {
-		return fromDate;
-	}
-	public void setFromDate(LocalDate fromDate) {
-		this.fromDate = fromDate;
-	}
-	public LocalDate getToDate() {
-		return toDate;
-	}
-	public void setToDate(LocalDate toDate) {
-		this.toDate = toDate;
-	}
-
+	
 	public String getDescription() {
 		return description;
 	}
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	public Date getCreateTime() {
-		return createTime;
+	public Date getFromDate() {
+		return fromDate;
 	}
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
+	public void setFromDate(Date fromDate) {
+		this.fromDate = fromDate;
 	}
-	public Date getUpdatedTime() {
-		return updatedTime;
+	public Date getToDate() {
+		return toDate;
 	}
-	public void setUpdatedTime(Date updatedTime) {
-		this.updatedTime = updatedTime;
-	}	
+	public void setToDate(Date toDate) {
+		this.toDate = toDate;
+	}
 }

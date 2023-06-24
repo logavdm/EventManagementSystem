@@ -139,11 +139,10 @@
                                        <children>
                                           <TableView fx:id="eventTableView" layoutX="10.0" layoutY="62.0" prefHeight="450.0" prefWidth="840.0">
                                             <columns>
-                                              <TableColumn fx:id="event_col_id" prefWidth="30.0" text="ID" />
-                                              <TableColumn fx:id="event_col_name" prefWidth="160.0" text="Name" />
-                                                <TableColumn fx:id="event_col_venue" prefWidth="160.0" text="Venue" />
+                                              <TableColumn fx:id="event_col_name" prefWidth="170.0" text="Name" />
+                                                <TableColumn fx:id="event_col_venue" prefWidth="170.0" text="Venue" />
                                                 <TableColumn fx:id="event_col_date" prefWidth="170.0" text="Date" />
-                                                <TableColumn fx:id="event_col_time" prefWidth="150.0" text="Time" />
+                                                <TableColumn fx:id="event_col_time" prefWidth="160.0" text="Time" />
                                                 <TableColumn fx:id="event_col_description" prefWidth="175.0" text="Description" />
                                             </columns>
                                           </TableView>
@@ -179,11 +178,10 @@
                                        <children>
                                           <TableView fx:id="allEventTableView" layoutX="10.0" layoutY="62.0" prefHeight="450.0" prefWidth="840.0">
                                             <columns>
-                                              <TableColumn fx:id="all_event_col_id" prefWidth="30.0" text="ID" />
-                                              <TableColumn fx:id="all_event_col_name" prefWidth="160.0" text="Name" />
-                                                <TableColumn fx:id="all_event_col_venue" prefWidth="160.0" text="Venue" />
+                                              <TableColumn fx:id="all_event_col_name" prefWidth="170.0" text="Name" />
+                                                <TableColumn fx:id="all_event_col_venue" prefWidth="170.0" text="Venue" />
                                                 <TableColumn fx:id="all_event_col_date" prefWidth="170.0" text="Date" />
-                                                <TableColumn fx:id="all_event_col_time" prefWidth="150.0" text="Time" />
+                                                <TableColumn fx:id="all_event_col_time" prefWidth="160.0" text="Time" />
                                                 <TableColumn fx:id="all_event_col_description" prefWidth="175.0" text="Description" />
                                             </columns>
                                           </TableView>
@@ -275,14 +273,12 @@
                                     
                                     <TextField fx:id="add_event_description_textView" layoutX="160.0" layoutY="470.0" prefHeight="40.0" prefWidth="450.0" styleClass="textfield" stylesheets="@EventdashboardDesign.css" />
                                     
+                                    <Button fx:id="event_addBtn" layoutX="670.0" layoutY="320.0" mnemonicParsing="false"  prefHeight="31.0" prefWidth="100.0" styleClass="add-btn" stylesheets="@EventdashboardDesign.css" text="Add Event" onAction="#addEvent"/>
                                     
-                                    <Button fx:id="event_addBtn" layoutX="670.0" layoutY="320.0" mnemonicParsing="false"  prefHeight="31.0" prefWidth="100.0" styleClass="add-btn" stylesheets="@EventdashboardDesign.css" text="Add Event" />
+                                    <Button fx:id="event_delete" layoutX="670.0" layoutY="370.0" mnemonicParsing="false"  prefHeight="31.0" prefWidth="94.0" styleClass="delete-btn" stylesheets="@EventdashboardDesign.css" text="Delete" onAction="#deleteEvent"/>
                                     
-                                    <Button fx:id="event_delete" layoutX="670.0" layoutY="370.0" mnemonicParsing="false"  prefHeight="31.0" prefWidth="94.0" styleClass="delete-btn" stylesheets="@EventdashboardDesign.css" text="Delete"/>
-                                    
-            						<Button fx:id="event_clear" layoutX="670.0" layoutY="420.0" mnemonicParsing="false"  prefHeight="31.0" prefWidth="94.0" styleClass="update-btn" stylesheets="@EventdashboardDesign.css" text="Clear"/>
-                   
-                                                               
+            						<Button fx:id="event_clear" layoutX="670.0" layoutY="420.0" mnemonicParsing="false"  prefHeight="31.0" prefWidth="94.0" styleClass="update-btn" stylesheets="@EventdashboardDesign.css" text="Clear" onAction="#clearEventSelection"/>
+                                                                                  
                                  </children>
                                  <styleClass>
                                     <String fx:value="white-bg" />

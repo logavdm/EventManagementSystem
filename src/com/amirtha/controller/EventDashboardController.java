@@ -11,6 +11,7 @@ import com.amirtha.helper.CommonHelper;
 import com.amirtha.helper.EventHelper;
 import com.amirtha.helper.UserHelper;
 import com.amirtha.model.Event;
+import com.amirtha.model.EventIO;
 import com.amirtha.model.User;
 import com.browniebytes.javafx.control.DateTimePicker;
 
@@ -96,18 +97,12 @@ public class EventDashboardController implements Initializable {
 	@FXML
 	private Button logout;
 	
-	
-
 	@FXML
 	private Label logoutlabel;
 
 	// ---------------------------------------
-
 	@FXML
 	private TableView<Event> eventTableView;
-
-	@FXML
-	private TableColumn<Event, String> event_col_id;
 
 	@FXML
 	private TableColumn<Event, String> event_col_name;
@@ -127,9 +122,6 @@ public class EventDashboardController implements Initializable {
 	// ALL EVENT TABLE VIEW
 	@FXML
 	private TableView<Event> allEventTableView;
-
-	@FXML
-	private TableColumn<Event, String> all_event_col_id;
 
 	@FXML
 	private TableColumn<Event, String> all_event_col_name;
@@ -229,7 +221,7 @@ public class EventDashboardController implements Initializable {
 	
 
 	public void convertToActiveEventTableView() {
-		event_col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
+		
 		event_col_name.setCellValueFactory(new PropertyValueFactory<>("name"));
 		event_col_venue.setCellValueFactory(new PropertyValueFactory<>("venue"));
 		
@@ -247,7 +239,7 @@ public class EventDashboardController implements Initializable {
 	
 	
 	public void convertToAllEventTableView() {
-		all_event_col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
+		
 		all_event_col_name.setCellValueFactory(new PropertyValueFactory<>("name"));
 		all_event_col_venue.setCellValueFactory(new PropertyValueFactory<>("venue"));		
 		
@@ -367,9 +359,6 @@ public class EventDashboardController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		
 		Platform.runLater(() -> {
-			
-			User usr=new User(null, "demo", "demo", "ADMIN", false, null, null);
-			this.sessionUser=usr;
 			
 			activeEventMenuSwitch(true);
 			allEventMenuSwitch(false);
@@ -580,71 +569,25 @@ public class EventDashboardController implements Initializable {
 				alert.showAndWait();
 			}
 		}
-		currentSelectedUser = null;
-		adduser_userid_textView.setText("");
-		adduser_username_textView.setText("");
-		adduser_password_textView.setText("");
 	}
 
 	public void addUser() {
-
-		String username = this.adduser_username_textView.getText();
-		String password = this.adduser_password_textView.getText();
-
+		User usr=new User(Long.valueOf(0), adduser_username_textView.getText(), adduser_password_textView.getText(), null, false, null, null);
 		Alert alert;
-
-		if (username.isBlank() || password.isBlank()) {
-			alert = new Alert(AlertType.WARNING);
-			alert.setTitle("Please provide username and password");
+		if(this.userHelper.validateAddUser(usr)) {
+			alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("User add success");
 			alert.setHeaderText(null);
-			alert.setContentText("Please provide username and password");
+			alert.setContentText("User add success");
 			alert.showAndWait();
-			return;
-		} else {
-
-			if (username.length() < 4 || username.length() > 10) {
-				alert = new Alert(AlertType.WARNING);
-				alert.setTitle("Username must be atleast 4 digit");
-				alert.setHeaderText(null);
-				alert.setContentText("Username must be atleast 4 digit");
-				alert.showAndWait();
-				return;
-			}
-
-			if (password.length() < 4 || password.length() > 10) {
-				alert = new Alert(AlertType.WARNING);
-				alert.setTitle("Password must be atleast 4 digit and not greater than 10");
-				alert.setHeaderText(null);
-				alert.setContentText("Password must be atleast 4 digit and not greater than 10");
-				alert.showAndWait();
-				return;
-			}
-
-			if (this.userHelper.checkUserExists(username)) {
-				alert = new Alert(AlertType.WARNING);
-				alert.setTitle("User already exists");
-				alert.setHeaderText(null);
-				alert.setContentText("User already exists");
-				alert.showAndWait();
-				return;
-			}
-
-			if (this.userHelper.addUser(new User(Long.valueOf(0), username, password, null, false, null, null))) {
-
-				alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("User add success");
-				alert.setHeaderText(null);
-				alert.setContentText("User add success");
-				alert.showAndWait();
-				clearUser();
-				loadUsers();
-			} else {
-				alert = new Alert(AlertType.WARNING);
-				alert.setTitle("User add failed");
-				alert.setHeaderText(null);
-				alert.setContentText("User add failed");
-				alert.showAndWait();
-			}
+			clearUser();
+			loadUsers();
+		}else {
+			alert = new Alert(AlertType.WARNING);
+			alert.setTitle("User add failed");
+			alert.setHeaderText(null);
+			alert.setContentText("User add failed");
+			alert.showAndWait();
 		}
 	}
 	
@@ -750,6 +693,65 @@ public class EventDashboardController implements Initializable {
 			mgnt_usr_btn.setStyle("-fx-background-color:transparent");
 			mgnt_usr_btn.setDisable(false);
 		}
+	}
+	
+	public void addEvent() {
+		EventIO event=new EventIO(this.add_event_name_textView.getText(),this.add_event_venue_textView.getText(),add_event_from_datepicker.getTime(),add_event_to_datepicker.getTime(),this.add_event_description_textView.getText());
+		if(this.eventHelper.validateAndAddEvent(event)) {
+			clearEventSelection();
+			LoadEventsForManage();
+		}
+	}
+	
+	public void deleteEvent() {
+		
+		Alert alert;
+		if(this.currentSelectedEvent==null) {
+			alert = new Alert(AlertType.WARNING);
+			alert.setTitle("Please select Event to delete");
+			alert.setHeaderText(null);
+			alert.setContentText("Please select Event to delete");
+			alert.showAndWait();
+			return;
+		}
+		
+		if(!this.eventHelper.checkExists(currentSelectedEvent.getId())) {
+			alert = new Alert(AlertType.WARNING);
+			alert.setTitle("Invalid event to delete");
+			alert.setHeaderText(null);
+			alert.setContentText("Invalid event to delete");
+			alert.showAndWait();
+			clearEventSelection();
+			LoadEventsForManage();
+			return;
+		}
+		
+		if (this.eventHelper.deleteEvent(currentSelectedEvent.getId())) {
+			clearEventSelection();
+			LoadEventsForManage();
+			alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Event delete success");
+			alert.setHeaderText(null);
+			alert.setContentText("Event delete success ");
+			alert.showAndWait();
+		} else {
+			clearEventSelection();
+			LoadEventsForManage();
+			alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Event delete failed");
+			alert.setHeaderText(null);
+			alert.setContentText("Event delete failed");
+			alert.showAndWait();
+		}
+	}
+	
+	public void clearEventSelection(){
+		this.currentSelectedEvent=null;
+		this.add_event_name_textView.setText("");
+		this.add_event_venue_textView.setText("");
+		this.add_event_from_datepicker.setTime(new Date());;
+		this.add_event_to_datepicker.setTime(new Date());;
+		this.add_event_description_textView.setText("");
 	}
 
 }
